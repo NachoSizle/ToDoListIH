@@ -18,6 +18,14 @@ export default {
   methods: {
     ...mapActions(userStore, ['fetchUser']),
   },
+  watch: {
+    // eslint-disable-next-line object-shorthand
+    '$route.params'(newParams) {
+      if (newParams.countryCode) {
+        this.fetchUser(newParams.countryCode);
+      }
+    },
+  },
   async created() {
     try {
       await this.fetchUser();
