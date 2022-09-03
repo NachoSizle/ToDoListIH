@@ -35,7 +35,6 @@ export default {
   async created() {
     try {
       await this.fetchUser();
-      console.log(this.user);
       if (!this.user) {
         this.$router.push({ path: '/auth' });
       } else {

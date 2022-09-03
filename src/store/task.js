@@ -18,18 +18,15 @@ export default defineStore('tasks', {
         .from(TASK_DB_NAME)
         .select('*')
         .order('id', { ascending: false });
-      console.log(tasks);
       this.tasks = tasks.map((task) => ({
         ...task,
         inserted_at: new Date(task.inserted_at).toLocaleDateString(),
       }));
-      console.log(this.tasks);
     },
     async addNewTask(task) {
       const { data, error } = await supabase.from(TASK_DB_NAME).insert(task);
       if (error) throw error;
       if (data) {
-        console.log(data);
         this.tasks.push(data);
       }
     },
@@ -38,7 +35,6 @@ export default defineStore('tasks', {
         const { data, error } = await supabase.from(TASK_DB_NAME).delete().match({ id: taskId });
         if (error) throw error;
         if (data && data.length) {
-          console.log(data);
           const taskToRemoveIndex = this.tasks.findIndex((task) => task.id === taskId);
           this.tasks = this.tasks.splice(taskToRemoveIndex, 1);
         } else {
@@ -46,7 +42,7 @@ export default defineStore('tasks', {
         }
         return data;
       } catch (error) {
-        console.log(error);
+        console.error(error);
         return null;
       }
     },
@@ -55,7 +51,6 @@ export default defineStore('tasks', {
         .update({ title: taskTitle }).match({ id: taskId });
       if (error) throw error;
       if (data) {
-        console.log(data);
         const taskToUpdate = this.tasks.filter((task) => task.id === taskId);
         taskToUpdate.title = data;
       }
