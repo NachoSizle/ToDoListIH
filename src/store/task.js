@@ -26,8 +26,8 @@ export default defineStore('tasks', {
     async addNewTask(task) {
       const { data, error } = await supabase.from(TASK_DB_NAME).insert(task);
       if (error) throw error;
-      if (data) {
-        this.tasks.push(data);
+      if (data.length) {
+        this.tasks.push(data[0]);
       }
     },
     async removeTask(taskId) {
