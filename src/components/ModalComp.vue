@@ -3,7 +3,7 @@
     <div class="modal--content">
       <div class="modal--header">
         <h2>{{ title }}</h2>
-        <button @click="handleCloseModal">X</button>
+        <button @click="closeModal">X</button>
       </div>
       <div class="modal--body">
         <slot />
@@ -13,6 +13,9 @@
 </template>
 
 <script>
+import { mapActions } from 'pinia';
+import appConfigStore from '@/store/appConfig';
+
 export default {
   name: 'ModalComp',
   props: {
@@ -20,15 +23,9 @@ export default {
       type: String,
       default: 'Modal',
     },
-    content: {
-      type: String,
-      default: 'Modal Content',
-    },
   },
   methods: {
-    handleCloseModal() {
-      this.$emit('close');
-    },
+    ...mapActions(appConfigStore, ['closeModal']),
   },
 };
 </script>

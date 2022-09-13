@@ -60,5 +60,8 @@ export default defineStore('tasks', {
         .update({ is_complete: state }).match({ id: taskId });
       if (error) throw error;
     },
+    getTaskById(taskId) {
+      return this.tasks.find((task) => task.id === taskId);
+    },
   },
 });

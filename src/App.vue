@@ -1,10 +1,13 @@
 <template>
   <NavBar />
   <router-view/>
-  <Modal v-show="modal.isOpen" v-bind="modal.props">
-    <template v-if="modal.props.action === 'edit-task'">
-      <EditTaskView />
+  <Modal v-show="modal.isOpen" :title="modal.props && modal.props.title ? modal.props.title : ''">
+    <EditTaskView v-if="modal.props && modal.props.action === 'edit-task'"
+      :details="modal.props && modal.props.details ? modal.props.details : {}" />
+    <template v-else-if="modal.props && modal.props.action && modal.props.action === 'delete-task'">
+      <h1>{{ modal.props && modal.props.title ? modal.props.title : ''}}</h1>
     </template>
+    <h1 v-else>El usuario que se ha introducido no existe</h1>
   </Modal>
 </template>
 
