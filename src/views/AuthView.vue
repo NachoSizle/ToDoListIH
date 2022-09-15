@@ -30,13 +30,6 @@ export default {
       this.signIn(userData.email, userData.password);
     },
   },
-  watch: {
-    user() {
-      if (this.user) {
-        this.$router.push({ path: '/' });
-      }
-    },
-  },
 };
 </script>
 

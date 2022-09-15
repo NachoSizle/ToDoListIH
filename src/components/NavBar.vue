@@ -16,11 +16,8 @@ export default {
   },
   methods: {
     ...mapActions(userStore, ['signOut']),
-    handleSignOut() {
-      this.signOut();
-      if (this.user === null) {
-        this.$router.push('/auth');
-      }
+    async handleSignOut() {
+      await this.signOut();
     },
   },
 };

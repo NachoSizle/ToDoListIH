@@ -37,14 +37,18 @@ export default {
   async created() {
     try {
       await this.fetchUser();
-      if (!this.user) {
-        this.$router.push({ path: '/auth' });
-      } else {
-        this.$router.push({ path: '/' });
-      }
     } catch (e) {
       console.error(e);
     }
+  },
+  watch: {
+    user() {
+      if (this.user) {
+        this.$router.push({ path: '/' });
+      } else {
+        this.$router.push({ path: '/auth' });
+      }
+    },
   },
 };
 </script>
