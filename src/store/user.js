@@ -3,7 +3,7 @@ import supabase from '../supabase/index';
 
 export default defineStore('userStore', {
   state: () => ({
-    user: null,
+    user: undefined,
   }),
 
   actions: {

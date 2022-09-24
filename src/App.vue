@@ -2,7 +2,8 @@
   <NavBar />
   <router-view/>
   <Modal v-show="modal.isOpen" :title="modal.props && modal.props.title ? modal.props.title : ''">
-    <EditTaskView v-if="modal.props && modal.props.action === 'edit-task'"
+    <NewTaskView v-if="modal.props && modal.props.action === 'new-task'" />
+    <EditTaskView v-else-if="modal.props && modal.props.action === 'edit-task'"
       :details="modal.props && modal.props.details ? modal.props.details : {}" />
     <template v-else-if="modal.props && modal.props.action && modal.props.action === 'delete-task'">
       <h1>{{ modal.props && modal.props.title ? modal.props.title : ''}}</h1>
@@ -19,12 +20,14 @@ import NavBar from '@/components/NavBar.vue';
 import Modal from '@/components/ModalComp.vue';
 
 import EditTaskView from '@/views/Task/EditTask.vue';
+import NewTaskView from '@/views/Task/NewTask.vue';
 
 export default {
   name: 'App',
   components: {
     NavBar,
     Modal,
+    NewTaskView,
     EditTaskView,
   },
   computed: {
@@ -46,7 +49,7 @@ export default {
       if (this.user) {
         this.$router.push({ path: '/' });
       } else {
-        this.$router.push({ path: '/auth' });
+        this.$router.push({ path: '/auth/sign-in' });
       }
     },
   },

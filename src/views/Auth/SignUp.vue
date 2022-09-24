@@ -1,7 +1,7 @@
 <template>
-  <h1>Esta es la vista de SignUp/In</h1>
+  <h1>Esta es la vista de SignUp</h1>
   <button @click="handleSignUp">SignUp</button>
-  <button @click="handleSignIn">SignIn</button>
+  <router-link to="/auth/sign-in">SignIn</router-link>
 </template>
 
 <script>
@@ -14,20 +14,13 @@ export default {
     ...mapState(userStore, ['user']),
   },
   methods: {
-    ...mapActions(userStore, ['signUp', 'signIn']),
+    ...mapActions(userStore, ['signUp']),
     handleSignUp() {
       const userData = {
         email: 'nacho.martinez@ironhack.com',
         password: 'pruebasignup',
       };
       this.signUp(userData.email, userData.password);
-    },
-    handleSignIn() {
-      const userData = {
-        email: 'nacho.martinez@ironhack.com',
-        password: 'pruebasignup',
-      };
-      this.signIn(userData.email, userData.password);
     },
   },
 };

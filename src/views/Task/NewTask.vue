@@ -1,58 +1,50 @@
 <template>
-  <div class="edit-task--container" v-if="task">
+  <div class="new-task--container">
     <form class="needs-validation">
       <label for="titleTask">
-        Update title to new task:
-        <input type="text" v-model="titleTask" :placeholder="task.title" required/>
+        Add title to new task:
+        <input type="text" v-model="titleTask" required/>
         <div class="valid-feedback">
           Looks good!
         </div>
         <div class="invalid-feedback">
-          Please provide a new title of task.
+          Please provide a title of task.
         </div>
       </label>
-      <button @click.prevent="handleUpdateTask">Update task</button>
+      <button @click.prevent="handleAddTask">Add new task</button>
     </form>
   </div>
 </template>
 
 <script>
+
 import { mapActions } from 'pinia';
 import taskStore from '@/store/task';
 import appConfigStore from '@/store/appConfig';
 
 export default {
-  name: 'EditTaskView',
+  name: 'NewTaskView',
   data() {
     return {
-      task: null,
       titleTask: '',
     };
   },
-  props: {
-    details: {
-      type: Object,
-      default: () => ({}),
-    },
-  },
   methods: {
-    ...mapActions(taskStore, ['getTaskById', 'updateTaskTitle']),
+    ...mapActions(taskStore, ['addNewTask']),
     ...mapActions(appConfigStore, ['closeModal']),
-    async handleUpdateTask() {
+    async handleAddTask() {
       const form = document.querySelector('.needs-validation');
       if (!form.checkValidity()) {
         form.classList.add('was-validated');
         return;
       }
-
       if (this.titleTask !== '') {
         const task = {
           title: this.titleTask,
-          taskId: this.task.id,
         };
 
         try {
-          await this.updateTaskTitle(task);
+          await this.addNewTask(task);
           const isInModal = this.checkIfIsInModal();
           if (isInModal) {
             this.closeModal();
@@ -69,21 +61,11 @@ export default {
       return this.$route.name === 'home';
     },
   },
-  watch: {
-    // eslint-disable-next-line object-shorthand
-    'details.taskId'() {
-      this.task = this.getTaskById(this.details.taskId);
-    },
-  },
-  created() {
-    const id = this.checkIfIsInModal() ? this.details.taskId : this.$route.params.id;
-    this.task = this.getTaskById(id);
-  },
 };
 </script>
 
 <style>
-.edit-task--container {
+.new-task--container {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -110,6 +92,6 @@ input {
   padding: 0.5rem;
   border: 1px solid #ccc;
   border-radius: 0.5rem;
-  margin-bottom: 1rem;
+  margin-bottom: 0;
 }
 </style>
