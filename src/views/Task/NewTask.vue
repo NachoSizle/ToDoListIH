@@ -3,7 +3,7 @@
     <form class="needs-validation">
       <label for="titleTask">
         Add title to new task:
-        <input type="text" v-model="titleTask" required/>
+        <input type="text" v-model="titleTask" class="form-control" required/>
         <div class="valid-feedback">
           Looks good!
         </div>

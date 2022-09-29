@@ -105,12 +105,6 @@ export default {
         console.error(error);
       }
     },
-    handleAddNewTask() {
-      this.addNewTask({
-        title: 'New task',
-        user_id: this.user.id,
-      });
-    },
   },
   created() {
     this.fetchTasks();
