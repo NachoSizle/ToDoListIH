@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import supabase from '../supabase/index';
+import useUserStore from './user';
 
 const TASK_DB_NAME = 'tasks';
 
@@ -24,41 +25,56 @@ export default defineStore('tasks', {
       }));
     },
     async addNewTask(task) {
-      const { data, error } = await supabase.from(TASK_DB_NAME).insert(task);
+      const userStore = useUserStore();
+      debugger;
+
+      const { data, error } = await supabase.from(TASK_DB_NAME).insert({
+        ...task,
+        user_id: userStore.user.id,
+      });
       if (error) throw error;
       if (data.length) {
-        this.tasks.push(data[0]);
+        this.tasks.push({
+          ...data[0],
+          inserted_at: new Date(data[0].inserted_at).toLocaleDateString(),
+        });
       }
     },
     async removeTask(taskId) {
-      try {
-        const { data, error } = await supabase.from(TASK_DB_NAME).delete().match({ id: taskId });
-        if (error) throw error;
-        if (data && data.length) {
-          const taskToRemoveIndex = this.tasks.findIndex((task) => task.id === taskId);
-          this.tasks = this.tasks.splice(taskToRemoveIndex, 1);
-        } else {
-          throw new Error('Task not found');
-        }
-        return data;
-      } catch (error) {
-        console.error(error);
-        return null;
+      const { data, error } = await supabase.from(TASK_DB_NAME).delete().match({ id: taskId });
+      if (error) throw error;
+      if (data && data.length) {
+        const taskToRemoveIndex = this.tasks.findIndex((task) => task.id === taskId);
+        this.tasks.splice(taskToRemoveIndex, 1);
+      } else {
+        throw new Error('Task not found');
       }
     },
-    async updateTaskTitle(taskId, taskTitle) {
+    async updateTaskTitle({ taskId, title }) {
       const { data, error } = await supabase.from(TASK_DB_NAME)
-        .update({ title: taskTitle }).match({ id: taskId });
+        .update({ title }).match({ id: taskId });
       if (error) throw error;
       if (data) {
-        const taskToUpdate = this.tasks.filter((task) => task.id === taskId);
-        taskToUpdate.title = data;
+        const taskToUpdateIndex = this.tasks.findIndex((task) => task.id === taskId);
+        const taskToUpdate = this.tasks[taskToUpdateIndex];
+        taskToUpdate.title = data[0].title;
+        if (taskToUpdate.is_complete) {
+          await this.updateTaskCompleteState(taskId);
+        }
       }
     },
-    async updateTaskCompleteState(taskId, state) {
-      const { error } = await supabase.from(TASK_DB_NAME)
+    async updateTaskCompleteState(taskId, state = false) {
+      const { data, error } = await supabase.from(TASK_DB_NAME)
         .update({ is_complete: state }).match({ id: taskId });
       if (error) throw error;
+      if (data) {
+        const taskToUpdateIndex = this.tasks.findIndex((task) => task.id === taskId);
+        const taskToUpdate = this.tasks[taskToUpdateIndex];
+        taskToUpdate.is_complete = data[0].is_complete;
+      }
+    },
+    getTaskById(taskId) {
+      return this.tasks.find((task) => task.id === taskId);
     },
   },
 });

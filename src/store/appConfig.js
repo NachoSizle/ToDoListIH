@@ -15,7 +15,9 @@ export default defineStore('appConfig', {
     showModal(modalProps) {
       this.modal.isOpen = true;
       this.modal.props = modalProps;
-      this.modal.props.details = modalProps.details || {};
+    },
+    closeModal() {
+      this.modal.isOpen = false;
     },
   },
 });
